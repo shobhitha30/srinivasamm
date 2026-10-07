@@ -10,3 +10,8 @@ export const env = {
   ZEFFY_WEBHOOK_SECRET: process.env.ZEFFY_WEBHOOK_SECRET as string,
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:5173',
 };
+
+if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error("🚨 CRITICAL ERROR: Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in environment variables!");
+  console.error("Please add them to your Vercel Project Settings > Environment Variables.");
+}
