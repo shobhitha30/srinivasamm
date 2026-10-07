@@ -1,0 +1,89 @@
+{
+  "trustees": [
+    {
+      "name": "Giri Devanur",
+      "role": "Founder and Executive Chairman, reAlpha Tech Corp.",
+      "image": "/images/giri_image.webp",
+      "linkedin": "https://www.linkedin.com/in/giridevanur/"
+    },
+    {
+      "name": "Nivedita Candade",
+      "role": "Founder and Principal, Manda Solutions",
+      "image": "/images/nivedita_image.webp"
+    },
+    {
+      "name": "Nagesh Srini",
+      "role": "Chief Executive Officer, Ideaon",
+      "image": "/images/nagesh_image.webp",
+      "linkedin": "https://www.linkedin.com/in/nageshsriniideaon/"
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What is SriNivasam?",
+      "answer": "SriNivasam is a digital platform that connects orphanages, orphans, donors, and volunteers. It aims to provide direct support to underprivileged children by bridging the gap between those in need and those who want to help."
+    },
+    {
+      "question": "How does SriNivasam help donors and orphanages connect?",
+      "answer": "Through SriNivasam, donors can directly find and support orphanages by making donations, providing materials, or volunteering. The platform ensures transparency and a streamlined connection between verified orphanages and compassionate individuals."
+    },
+    {
+      "question": "How can I donate through SriNivasam?",
+      "answer": "SriNivasam uses Zeffy, a secure and commission-free donation platform. You can choose an orphanage, fill out the form, and make your contribution easily via Zeffy."
+    },
+    {
+      "question": "Is there any tax or fee charged on donations made via Zeffy?",
+      "answer": "No, Zeffy does not charge credit card fees or any platform or transaction fees to nonprofits. Zeffy is a 100% free fundraising platform for nonprofits, meaning they cover all processing fees — so 100% of your donation goes directly to the organization you support."
+    },
+    {
+      "question": "Are donations through Zeffy eligible for tax deductions?",
+      "answer": "Tax deductibility depends on local laws and whether the recipient orphanage is registered with appropriate tax-exempt status (like 80G in India or 501(c)(3) in the US). Please check the details listed on the donation form or contact the orphanage directly."
+    },
+    {
+      "question": "What is FCRA and how does it affect international donations?",
+      "answer": "The Foreign Contribution Regulation Act (FCRA) governs donations made to Indian organizations from abroad. Orphanages receiving international donations must have a valid FCRA license. SriNivasam works only with verified orphanages that comply with FCRA guidelines."
+    },
+    {
+      "question": "Can I volunteer with an orphanage through SriNivasam?",
+      "answer": "Yes! SriNivasam allows individuals to browse volunteer opportunities at registered orphanages and apply directly. Activities may include tutoring, mentoring, or event support."
+    },
+    {
+      "question": "Is SriNivasam a non-profit organization?",
+      "answer": "Yes, SriNivasam is a non-profit initiative focused on child welfare, using technology to connect orphanages with the support they need."
+    }
+  ],
+  "blogs": [
+    {
+      "id": 4,
+      "title": "Why Modern Tech Matters for Orphan Welfare: Building Trust Through Transparency",
+      "author": "Sabin Thapa",
+      "authorLink": "https://www.linkedin.com/in/thapa-sabin/",
+      "summary": "How technology transforms orphan care from paperwork chaos to real-time transparency. Discover why SriNivasam chose modern tools to ensure every donation reaches the right child, every volunteer finds the right match, and every donor sees real impact.",
+      "image": "/images/blog-tech.webp"
+    },
+    {
+      "id": 3,
+      "title": "How We Ensure Every Rupee Is Accountable: Inside Srinivasam’s Transparent Giving Model",
+      "author": "Hridaya Pradhan",
+      "authorLink": "https://www.linkedin.com/in/hridaya-pradhan-a7a792245/",
+      "summary": "Learn how SriNivasam’s transparent giving model uses unique Zeffy forms for each verified orphanage, ensuring accountability and boosting donor trust.",
+      "image": "/images/blog-accountable.webp"
+    },
+    {
+      "id": 2,
+      "title": "One Meal, One Child, One Future: How Your Small Donation Creates a Big Impact",
+      "author": "Giri Devanur",
+      "authorLink": "https://www.linkedin.com/in/giridevanur/",
+      "summary": "A moving story of how a single dollar can feed 10 children and spark hope. This blog reveals how small donations create real impact through SriNivasam’s grassroots work in India and Nepal.",
+      "image": "/images/blog-meal.webp"
+    },
+    {
+      "id": 1,
+      "title": "Why 30 Million Children in India and Nepal Deserve Better: The Orphan Crisis Explained",
+      "author": "Giri Devanur",
+      "authorLink": "https://www.linkedin.com/in/giridevanur/",
+      "summary": "A raw and urgent call to action highlighting that 30 million orphaned children in India and Nepal are living without systems of support. It challenges us to build scalable, tech-powered solutions—infrastructure, not just charity—for a humanitarian crisis hiding in plain sight.",
+      "image": "/images/blog-crisis.webp"
+    }
+  ]
+}
