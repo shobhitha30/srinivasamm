@@ -19,7 +19,8 @@ import { requireAdmin } from './middleware/requireAdmin';
 
 const app = express();
 
-app.use(cors({ origin: env.CORS_ORIGIN }));
+const corsOrigin = env.CORS_ORIGIN === '*' ? '*' : env.CORS_ORIGIN;
+app.use(cors({ origin: corsOrigin, credentials: corsOrigin !== '*' }));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(compression());
