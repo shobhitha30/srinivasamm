@@ -24,8 +24,18 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(compression());
 app.use(express.json());
+app.set('etag', false); // Disable ETag generation to prevent 304 responses
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+// Prevent caching for API routes
+app.use('/api', (req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  res.set('Surrogate-Control', 'no-store');
+  next();
+});
 
 app.use('/api/admin', auth, requireAdmin, adminRoutes);
 app.use('/api/auth', authRoutes);
