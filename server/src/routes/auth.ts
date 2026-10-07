@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, User } from '@supabase/supabase-js';
 import { env } from '../config/env';
 
 const router = Router();
@@ -117,7 +117,7 @@ router.post('/confirm', async (req, res) => {
       if (error) {
         return res.status(500).json({ success: false, error: error.message });
       }
-      const match = data.users.find((u) => (u.email ?? '').toLowerCase() === email);
+      const match = data.users.find((u: User) => (u.email ?? '').toLowerCase() === email);
       if (match) userId = match.id;
       if (data.users.length < 200) break;
       page += 1;
