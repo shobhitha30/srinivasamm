@@ -28,6 +28,16 @@ app.use(express.json());
 app.set('etag', false); // Disable ETag generation to prevent 304 responses
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/api/health', (req, res) =>
+  res.json({
+    status: 'ok',
+    env: {
+      SUPABASE_URL: !!env.SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY: !!env.SUPABASE_SERVICE_ROLE_KEY,
+      SUPABASE_JWT_SECRET: !!env.SUPABASE_JWT_SECRET,
+    },
+  })
+);
 
 // Prevent caching for API routes
 app.use('/api', (req, res, next) => {
@@ -50,8 +60,8 @@ app.use('/api', matchingRoutes);
 
 const PORT = env.PORT || 3001;
 
-// Only listen if not running in a serverless environment (like Vercel)
-if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
+// Only listen when running as a standalone server (never on Vercel serverless)
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
