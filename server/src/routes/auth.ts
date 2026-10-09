@@ -3,7 +3,9 @@ import { createClient, User } from '@supabase/supabase-js';
 import { env } from '../config/env';
 
 const router = Router();
-const supabaseAdmin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
+const url = env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const key = env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-role-key';
+const supabaseAdmin = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
 
 function normalizeRole(value: unknown): string | null {
   if (typeof value !== 'string') return null;
