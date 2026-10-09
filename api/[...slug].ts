@@ -1,10 +1,9 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import { env } from '../server/src/config/env';
 
 const app = express();
 app.get('/api/health', (req, res) => {
-  dotenv.config();
-  res.json({ ok: true, step: 'dotenv', hasUrl: !!process.env.SUPABASE_URL });
+  res.json({ ok: true, step: 'env', hasUrl: !!env.SUPABASE_URL, hasKey: !!env.SUPABASE_SERVICE_ROLE_KEY });
 });
 
 export default app;
