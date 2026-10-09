@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm:server:dev\" \"wait-on tcp:3001 && vite\"",
     "server:dev": "npm run dev --prefix server",
-    "build": "vite build",
+    "build": "node build.js",
     "lint": "oxlint",
     "preview": "vite preview"
   },
