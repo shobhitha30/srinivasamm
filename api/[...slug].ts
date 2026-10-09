@@ -1,4 +1,6 @@
-import app from '../server/src/index.js';
+import serverModule from '../server/src/index.js';
+
+const app: any = (serverModule as any).default ?? serverModule;
 
 export default (req: any, res: any) => {
   // Vercel's [...slug] route may strip the /api prefix from req.url.
