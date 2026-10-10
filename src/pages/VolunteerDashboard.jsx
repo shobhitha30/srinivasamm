@@ -72,7 +72,7 @@ export function VolunteerDashboard() {
 
   return (
     <div className="page-container max-w-4xl" style={{ padding: '2.5rem 1.5rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
         <div>
           <h1 style={{ margin: '0 0 0.5rem 0' }}>Volunteer Dashboard</h1>
           <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Welcome back! Here are your assignments.</p>
@@ -92,7 +92,7 @@ export function VolunteerDashboard() {
           <div className="space-y-md">
             {assignments.map(a => (
               <div key={a.id} style={{ border: '1px solid var(--border)', padding: '1rem', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div>
                     <h4 style={{ margin: '0 0 0.25rem 0' }}>{a.volunteer_requests?.title}</h4>
                     <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>

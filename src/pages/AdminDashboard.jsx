@@ -14,12 +14,13 @@ import {
   LayoutDashboard, Building2, Megaphone, 
   PackageSearch, Users, CalendarSync,
   BadgeDollarSign, History, AlertCircle, CheckCircle2,
-  XCircle, Clock, PauseCircle, LogOut
+  XCircle, Clock, PauseCircle, LogOut, Menu, X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -794,23 +795,59 @@ export function AdminDashboard() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--gray-50)', display: 'flex', flexDirection: 'column' }}>
       {/* ── Top Header Bar ── */}
-      <div style={{ background: 'white', borderBottom: '1px solid var(--border)', padding: '0 2rem', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: 'var(--shadow-xs)', flexShrink: 0 }}>
+      <div className="admin-header-bar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#1e293b,#0f172a)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>?</div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-900)' }}>Srinivasam Admin</div>
+          <button 
+            className="admin-mobile-toggle"
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            aria-label="Toggle navigation drawer"
+          >
+            {mobileSidebarOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+          <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#1e293b,#0f172a)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', color: '#fff', fontWeight: 800, flexShrink: 0 }}>S</div>
+          <div className="min-w-0">
+            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-900)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Srinivasam Admin</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Operations Dashboard</div>
           </div>
         </div>
-        <button className="btn btn-outline btn-sm" onClick={handleSignOut} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        <button className="btn btn-outline btn-sm" onClick={handleSignOut} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
           <LogOut size={14} />
-          Sign Out
+          <span>Sign Out</span>
         </button>
       </div>
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        {/* ── Sidebar ── */}
-        <aside style={{ width: 220, background: 'white', borderRight: '1px solid var(--border)', padding: '1.5rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', flexShrink: 0, overflowY: 'auto' }}>
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
+        {/* ── Mobile Sidebar Drawer Backdrop ── */}
+        {mobileSidebarOpen && (
+          <div className="admin-sidebar-backdrop" onClick={() => setMobileSidebarOpen(false)} />
+        )}
+
+        {/* ── Mobile Sidebar Drawer ── */}
+        <aside className={`admin-sidebar-mobile ${mobileSidebarOpen ? 'open' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '0 0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Navigation</span>
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gray-500)' }} onClick={() => setMobileSidebarOpen(false)} aria-label="Close drawer">
+              <X size={20} />
+            </button>
+          </div>
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setFilter('all'); setMobileSidebarOpen(false); }}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.65rem 0.75rem', border: 'none', borderRadius: 8, background: isActive ? 'var(--primary-50)' : 'transparent', color: isActive ? 'var(--primary-700)' : 'var(--gray-600)', fontWeight: isActive ? 700 : 500, fontSize: '0.875rem', cursor: 'pointer', textAlign: 'left', transition: 'all 0.12s ease' }}
+              >
+                <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
+                {tab.label}
+              </button>
+            );
+          })}
+        </aside>
+
+        {/* ── Desktop Sidebar ── */}
+        <aside className="admin-sidebar-desktop" style={{ width: 220, background: 'white', borderRight: '1px solid var(--border)', padding: '1.5rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', flexShrink: 0, overflowY: 'auto' }}>
           <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '0 0.75rem', marginBottom: '0.5rem' }}>Navigation</p>
           {tabs.map(tab => {
             const Icon = tab.icon;
@@ -829,16 +866,16 @@ export function AdminDashboard() {
         </aside>
 
         {/* ── Main Content ── */}
-        <main style={{ flex: 1, padding: '2rem', overflowY: 'auto', minWidth: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
-            <div>
+        <main className="admin-main-content" style={{ flex: 1, padding: '2rem', overflowY: 'auto', minWidth: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div className="min-w-0" style={{ flex: 1 }}>
               <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--gray-900)', margin: 0, letterSpacing: '-0.02em' }}>{tabs.find(t => t.id === activeTab)?.label}</h1>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0' }}>
                 {activeTab === 'overview' ? 'Platform-wide metrics at a glance.' : activeTab === 'audit' ? 'Full audit trail of admin actions.' : `Manage and review ${tabs.find(t => t.id === activeTab)?.label?.toLowerCase()} on the platform.`}
               </p>
             </div>
             {activeTab === 'campaigns' && (
-              <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }} onClick={() => setShowCreateCampaign(true)}>
+              <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600, flexShrink: 0 }} onClick={() => setShowCreateCampaign(true)}>
                 + Launch Platform Campaign
               </button>
             )}
@@ -846,7 +883,7 @@ export function AdminDashboard() {
 
           <FilterButtons />
 
-          <div className="card" style={{ padding: '1.5rem', minHeight: 300 }}>
+          <div className="card" style={{ padding: '1.25rem', minHeight: 300, minWidth: 0 }}>
             {loading ? (
               <div className="loading-state">
                 <div className="spinner" />
@@ -854,7 +891,7 @@ export function AdminDashboard() {
               </div>
             ) : error ? (
               <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>?</div>
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚠️</div>
                 <p style={{ color: 'var(--color-danger)', fontWeight: 600, marginBottom: '0.25rem' }}>Could not connect to the server</p>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>The backend may still be starting up. Please wait a moment and try again.</p>
                 <button className="btn btn-primary btn-sm" onClick={() => fetchData()}>↻ Retry</button>
