@@ -133,6 +133,23 @@ export function Navbar() {
         {/* Desktop Links */}
         <div className={`navbar-links${menuOpen ? ' open' : ''}`}>
           {getLinks()}
+          <div className="navbar-mobile-auth">
+            {user ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border)' }}>
+                <Link to="/profile" className="btn btn-outline btn-sm" onClick={closeMenu} style={{ width: '100%', justifyContent: 'center' }}>
+                  My Profile ({displayName})
+                </Link>
+                <button className="btn btn-primary btn-sm" onClick={() => { closeMenu(); handleSignOut(); }} style={{ width: '100%', justifyContent: 'center' }}>
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border)' }}>
+                <Link to="/login" className="btn btn-outline btn-sm" onClick={closeMenu} style={{ width: '100%', justifyContent: 'center' }}>Log in</Link>
+                <Link to="/signup" className="btn btn-primary btn-sm" onClick={closeMenu} style={{ width: '100%', justifyContent: 'center' }}>Sign up</Link>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Right section */}
@@ -142,41 +159,38 @@ export function Navbar() {
               href={ZEFFY_DONATION_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-cta btn-sm"
-              style={{ display: menuOpen ? 'none' : 'inline-flex' }}
+              className="btn btn-cta btn-sm navbar-donate-btn"
             >
               Donate Now
             </a>
           )}
 
-          {user ? (
-            <div className="navbar-user">
-              <Link to="/profile" className="navbar-avatar" aria-label="My profile" title={displayName}>
-                {displayInitial}
-              </Link>
-              <span className="navbar-name">{displayName}</span>
-              <button
-                className="btn btn-outline btn-sm"
-                onClick={handleSignOut}
-                aria-label="Sign out"
-              >
-                Sign out
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <Link to="/login" className="btn btn-outline btn-sm">Log in</Link>
-              <Link
-                to="/signup"
-                className="btn btn-primary btn-sm"
-                style={{ display: menuOpen ? 'none' : 'inline-flex' }}
-              >
-                Sign up
-              </Link>
-            </div>
-          )}
+          {/* Desktop Auth Controls */}
+          <div className="navbar-desktop-auth">
+            {user ? (
+              <div className="navbar-user">
+                <Link to="/profile" className="navbar-avatar" aria-label="My profile" title={displayName}>
+                  {displayInitial}
+                </Link>
+                <span className="navbar-name">{displayName}</span>
+                <button
+                  className="btn btn-outline btn-sm"
+                  onClick={handleSignOut}
+                  aria-label="Sign out"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <Link to="/login" className="btn btn-outline btn-sm">Log in</Link>
+                <Link to="/signup" className="btn btn-primary btn-sm">Sign up</Link>
+              </div>
+            )}
+          </div>
 
-          <button onClick={toggleTheme} className="btn btn-ghost btn-sm" aria-label="Toggle Theme" style={{marginRight: '0.5rem'}}>{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
+          <button onClick={toggleTheme} className="btn btn-ghost btn-sm" aria-label="Toggle Theme" style={{ padding: '0.35rem 0.5rem' }}>{isDark ? <Sun size={18} /> : <Moon size={18} />}</button>
+
           {/* Mobile hamburger */}
           <button
             className="navbar-menu-toggle"
