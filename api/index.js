@@ -954,13 +954,13 @@ router$5.post("/", auth, requireRole(["orphanage"]), async (req, res) => {
 	const { data: orphanage } = await supabase.from("orphanages").select("id").eq("profile_id", user.id).single();
 	const { data, error } = await supabase.from("needs").insert({
 		...req.body,
-		orphanage_id: orphanage?.id,
+		orphanage_id: orphanage?.id || req.body.orphanage_id,
 		status: "pending"
 	}).select().single();
 	res.json({
 		success: !error,
 		data,
-		error
+		error: error?.message
 	});
 });
 router$5.get("/my", auth, requireRole(["orphanage"]), async (req, res) => {

@@ -11,11 +11,11 @@ router.post('/', auth, requireRole(['orphanage']), async (req, res) => {
   
   const { data, error } = await supabase.from('needs').insert({
     ...req.body,
-    orphanage_id: orphanage?.id,
+    orphanage_id: orphanage?.id || req.body.orphanage_id,
     status: 'pending'
   }).select().single();
 
-  res.json({ success: !error, data, error });
+  res.json({ success: !error, data, error: error?.message });
 });
 
 router.get('/my', auth, requireRole(['orphanage']), async (req, res) => {

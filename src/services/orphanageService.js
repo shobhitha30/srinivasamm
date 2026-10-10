@@ -201,6 +201,15 @@ export async function createNeed(orphanageId, needData) {
       status: 'pending',
     };
 
+    try {
+      const { data } = await apiClient.post('/needs', payload);
+      if (data && data.success && data.data) {
+        return data.data;
+      }
+    } catch (apiErr) {
+      console.warn('createNeed API failed, falling back to direct Supabase insert:', apiErr?.message);
+    }
+
     const { data, error } = await supabase
       .from('needs')
       .insert([payload])
@@ -259,6 +268,15 @@ export async function createCampaign(orphanageId, campaignData) {
       end_date: campaignData.endDate || null,
       created_at: new Date().toISOString(),
     };
+
+    try {
+      const { data } = await apiClient.post('/campaigns', payload);
+      if (data && data.success && data.data) {
+        return data.data;
+      }
+    } catch (apiErr) {
+      console.warn('createCampaign API failed, falling back to direct Supabase insert:', apiErr?.message);
+    }
 
     const { data, error } = await supabase
       .from('campaigns')

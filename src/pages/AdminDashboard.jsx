@@ -489,7 +489,7 @@ export function AdminDashboard() {
                 return (
                   <tr key={c.id}>
                     <td>{c.title}</td>
-                    <td>{c.orphanages?.name || 'Platform'}</td>
+                    <td>{c.orphanage?.name || c.orphanages?.name || 'Platform'}</td>
                     <td>${goal}</td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -537,7 +537,7 @@ export function AdminDashboard() {
               {data.map(n => (
                 <tr key={n.id}>
                   <td>{n.title}</td>
-                  <td>{n.orphanages?.name}</td>
+                  <td>{n.orphanage?.name || n.orphanages?.name || 'Platform'}</td>
                   <td>{n.category}</td>
                   <td><span className={`badge badge-${n.priority === 'urgent' ? 'danger' : n.priority === 'high' ? 'warning' : 'neutral'}`}>{n.priority}</span></td>
                   <td>{n.quantity_required ? `${n.quantity_required}` : (n.estimated_cost ? `$${n.estimated_cost}` : '-')}</td>
@@ -621,7 +621,7 @@ export function AdminDashboard() {
               {data.map(r => (
                 <tr key={r.id}>
                   <td>{r.title}</td>
-                  <td>{r.orphanages?.name}</td>
+                  <td>{r.orphanage?.name || r.orphanages?.name || 'Platform'}</td>
                   <td>{r.required_skills?.join(', ')}</td>
                   <td>{new Date(r.start_time).toLocaleDateString()}</td>
                   <td><StatusBadge status={r.status} /></td>
