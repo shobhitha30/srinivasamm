@@ -211,6 +211,14 @@ router.put('/campaigns/:id/review', async (req, res) => {
   res.json({ success: !error, data, error: error?.message });
 });
 
+router.delete('/campaigns/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = (req as any).user;
+  const { error } = await supabase.from('campaigns').delete().eq('id', id);
+  if (!error) await logAudit(user.id, `campaign_deleted`, 'campaigns', id, {});
+  res.json({ success: !error, error: error?.message });
+});
+
 // ── Needs ───────────────────────────────────────────────────
 router.get('/needs', async (req, res) => {
   const { status } = req.query;
@@ -236,6 +244,14 @@ router.put('/needs/:id/review', async (req, res) => {
 
   if (data) await logAudit(user.id, `need_${status}`, 'needs', id, { status, rejection_reason });
   res.json({ success: !error, data, error: error?.message });
+});
+
+router.delete('/needs/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = (req as any).user;
+  const { error } = await supabase.from('needs').delete().eq('id', id);
+  if (!error) await logAudit(user.id, `need_deleted`, 'needs', id, {});
+  res.json({ success: !error, error: error?.message });
 });
 
 // ── Volunteers ──────────────────────────────────────────────
@@ -264,6 +280,14 @@ router.put('/volunteers/:id/review', async (req, res) => {
   res.json({ success: !error, data, error: error?.message });
 });
 
+router.delete('/volunteers/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = (req as any).user;
+  const { error } = await supabase.from('volunteers').delete().eq('id', id);
+  if (!error) await logAudit(user.id, `volunteer_deleted`, 'volunteers', id, {});
+  res.json({ success: !error, error: error?.message });
+});
+
 // ── Volunteer Requests ──────────────────────────────────────
 router.get('/volunteer-requests', async (req, res) => {
   const { status } = req.query;
@@ -289,6 +313,14 @@ router.put('/volunteer-requests/:id/review', async (req, res) => {
 
   if (data) await logAudit(user.id, `volunteer_request_${status}`, 'volunteer_requests', id, { status, rejection_reason });
   res.json({ success: !error, data, error: error?.message });
+});
+
+router.delete('/volunteer-requests/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = (req as any).user;
+  const { error } = await supabase.from('volunteer_requests').delete().eq('id', id);
+  if (!error) await logAudit(user.id, `volunteer_request_deleted`, 'volunteer_requests', id, {});
+  res.json({ success: !error, error: error?.message });
 });
 
 // ── Manual Assignment ───────────────────────────────────────

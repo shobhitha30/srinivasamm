@@ -39,6 +39,35 @@ export async function getOrphanageById(id) {
 }
 
 /**
+ * Fetch a single campaign by ID.
+ */
+export async function getCampaignById(id) {
+  if (!id) return null;
+  try {
+    const { data } = await apiClient.get(`/campaigns/${id}`);
+    if (data && data.success && data.data) {
+      return data.data;
+    }
+  } catch (err) {
+    console.warn('getCampaignById error:', err);
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('campaigns')
+      .select('*, orphanage:orphanages(*)')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (!error && data) return data;
+  } catch (err) {
+    console.warn('getCampaignById supabase fallback error:', err);
+  }
+
+  return null;
+}
+
+/**
  * Fetch a single orphanage by profile ID or admin ID.
  */
 export async function getOrphanageByAdminId(profileId) {

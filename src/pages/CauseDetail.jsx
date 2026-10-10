@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getOrphanageById } from '../services/orphanageService';
+import { getOrphanageById, getCampaignById } from '../services/orphanageService';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { LoadingState } from '../components/common/LoadingState';
 import { ImpactGallery } from '../components/common/ImpactGallery';
@@ -11,19 +11,47 @@ export function CauseDetail() {
   const [cause, setCause] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     async function fetchCause() {
       setLoading(true);
       try {
-        const data = await getOrphanageById(id);
-        if (data) {
-          setCause(data);
-        } else {
-          // Removed fallback mock data to enforce 100% backend truth
+        // First try fetching as a Campaign
+        const campaign = await getCampaignById(id);
+        if (campaign) {
+          const orphanage = campaign.orphanage || {};
+          setCause({
+            id: campaign.id,
+            name: campaign.title,
+            description: campaign.description,
+            image_url: campaign.image_url || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=75',
+            goal_amount: parseFloat(campaign.goal_amount) || 0,
+            raised_amount: parseFloat(campaign.raised_amount) || 0,
+            zeffy_url: campaign.zeffy_url,
+            city: orphanage.city || 'India',
+            state: orphanage.state || '',
+            country: orphanage.country || '',
+            registration_number: orphanage.registration_number || 'SRN-VERIFIED',
+            children_count: orphanage.children_count || 50,
+            verification_status: campaign.status || 'approved',
+            type: 'campaign',
+          });
+          return;
         }
+
+        // Next try fetching as an Orphanage Profile
+        const orphanage = await getOrphanageById(id);
+        if (orphanage) {
+          setCause({
+            ...orphanage,
+            type: 'orphanage',
+          });
+          return;
+        }
+
+        setCause(null);
       } catch (err) {
         console.warn('Error loading cause detail:', err);
+        setCause(null);
       } finally {
         setLoading(false);
       }
@@ -87,6 +115,20 @@ export function CauseDetail() {
           <div className="md:col-span-2">
             <h3 className="text-lg font-bold mb-sm text-heading">About the Organization</h3>
             <p className="text-body leading-relaxed mb-lg">{cause.description}</p>
+
+            {/* Campaign progress if goal is set */}
+            {cause.goal_amount > 0 && (
+              <div className="bg-subtle p-lg rounded-xl mb-xl border">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-muted mb-sm">Campaign Progress</h4>
+                <div className="flex justify-between text-sm font-bold mb-xs" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <span>Raised: ${(cause.raised_amount || 0).toLocaleString()}</span>
+                  <span>Goal: ${cause.goal_amount.toLocaleString()}</span>
+                </div>
+                <div style={{ width: '100%', height: '10px', background: '#e5e7eb', borderRadius: '5px', overflow: 'hidden' }}>
+                  <div style={{ width: `${Math.min(100, Math.round(((cause.raised_amount || 0) / cause.goal_amount) * 100))}%`, height: '100%', background: 'var(--primary-600, #16a34a)' }} />
+                </div>
+              </div>
+            )}
 
             {/* Verification highlights */}
             <div className="bg-subtle p-lg rounded-xl mb-xl border">

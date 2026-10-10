@@ -3,10 +3,10 @@ import { Shield } from 'lucide-react';
 import { 
   getAdminOverview, 
   getAdminOrphanages, reviewOrphanage, deleteAdminOrphanage, getAdminOrphanageById,
-  getAdminCampaigns, reviewCampaign, createAdminCampaign, updateAdminCampaign,
-  getAdminNeeds, reviewNeed,
-  getAdminVolunteers, reviewVolunteer,
-  getAdminVolunteerRequests, reviewVolunteerRequest, triggerMatching, assignVolunteerToRequest,
+  getAdminCampaigns, reviewCampaign, createAdminCampaign, updateAdminCampaign, deleteAdminCampaign,
+  getAdminNeeds, reviewNeed, deleteAdminNeed,
+  getAdminVolunteers, reviewVolunteer, deleteAdminVolunteer,
+  getAdminVolunteerRequests, reviewVolunteerRequest, triggerMatching, assignVolunteerToRequest, deleteAdminVolunteerRequest,
   getAdminDonations, getAdminAudits,
   getAdminUsers, updateAdminUserRole, deleteAdminUser
 } from '../services/adminService';
@@ -343,20 +343,27 @@ export function AdminDashboard() {
     }
   };
 
-  const handleDeleteOrphanage = async (id) => {
-    if (!window.confirm('Are you sure you want to completely delete this orphanage? This action cannot be undone.')) return;
-    
+  const handleDeleteItem = async (type, id, name = 'item') => {
+    if (!window.confirm(`Are you sure you want to completely delete this ${name}? This action cannot be undone.`)) return;
+
     // Optimistic delete
     setData(prev => Array.isArray(prev) ? prev.filter(item => item.id !== id) : prev);
-    
+
     try {
-      await deleteAdminOrphanage(id);
+      if (type === 'orphanage') await deleteAdminOrphanage(id);
+      if (type === 'campaign') await deleteAdminCampaign(id);
+      if (type === 'need') await deleteAdminNeed(id);
+      if (type === 'volunteer') await deleteAdminVolunteer(id);
+      if (type === 'volunteer_request') await deleteAdminVolunteerRequest(id);
+      if (type === 'user') await deleteAdminUser(id);
       fetchData(false);
     } catch (err) {
-      alert(err.message || 'Failed to delete orphanage');
+      alert(err.message || `Failed to delete ${name}`);
       fetchData(false);
     }
   };
+
+  const handleDeleteOrphanage = (id) => handleDeleteItem('orphanage', id, 'orphanage');
 
   const handleMatch = async (id) => {
     try {
@@ -502,12 +509,13 @@ export function AdminDashboard() {
                     </td>
                     <td><StatusBadge status={c.status} /></td>
                     <td>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        {c.status !== 'approved' && c.status !== 'active' && c.status !== 'closed' && <button className="btn btn-xs btn-primary" onClick={() => handleReview('campaign', c.id, 'approved')}>Approve</button>}
-                        {c.status !== 'rejected' && c.status !== 'closed' && <button className="btn btn-xs btn-danger"  onClick={() => handleReview('campaign', c.id, 'rejected', true)}>Reject</button>}
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {c.status !== 'approved' && c.status !== 'active' && <button className="btn btn-xs btn-primary" onClick={() => handleReview('campaign', c.id, 'approved')}>Approve</button>}
+                        {c.status !== 'rejected' && <button className="btn btn-xs btn-danger" onClick={() => handleReview('campaign', c.id, 'rejected', true)}>Reject</button>}
                         <button className="btn btn-xs btn-outline" onClick={() => setEditingCampaign(c)}>Edit</button>
                         {(c.status === 'approved' || c.status === 'active') && <button className="btn btn-xs btn-outline" onClick={() => handleReview('campaign', c.id, 'closed', true)}>Close</button>}
                         {c.status === 'closed' && <button className="btn btn-xs btn-outline" onClick={() => handleReview('campaign', c.id, 'active')}>Reopen</button>}
+                        <button className="btn btn-xs btn-outline" style={{ borderColor: 'var(--color-danger)', color: 'var(--color-danger)' }} onClick={() => handleDeleteItem('campaign', c.id, 'campaign')}>Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -544,8 +552,8 @@ export function AdminDashboard() {
                   <td><StatusBadge status={n.status} /></td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      {n.status !== 'approved' && n.status !== 'active' && n.status !== 'fulfilled' && <button className="btn btn-xs btn-primary" onClick={() => handleReview('need', n.id, 'approved')}>Approve</button>}
-                      {n.status !== 'rejected' && n.status !== 'fulfilled' && <button className="btn btn-xs btn-danger"  onClick={() => handleReview('need', n.id, 'rejected', true)}>Reject</button>}
+                      {n.status !== 'approved' && n.status !== 'fulfilled' && <button className="btn btn-xs btn-primary" onClick={() => handleReview('need', n.id, 'approved')}>Approve</button>}
+                      {n.status !== 'rejected' && n.status !== 'fulfilled' && <button className="btn btn-xs btn-danger" onClick={() => handleReview('need', n.id, 'rejected', true)}>Reject</button>}
                       {n.status === 'approved' && (
                         <button
                           className="btn btn-xs btn-cta"
@@ -560,6 +568,7 @@ export function AdminDashboard() {
                       {(n.status === 'approved' || n.status === 'active') && (
                         <button className="btn btn-xs btn-outline" style={{ borderColor: 'var(--color-success)', color: 'var(--color-success)' }} onClick={() => handleReview('need', n.id, 'fulfilled')}>Mark Fulfilled</button>
                       )}
+                      <button className="btn btn-xs btn-outline" style={{ borderColor: 'var(--color-danger)', color: 'var(--color-danger)' }} onClick={() => handleDeleteItem('need', n.id, 'need')}>Delete</button>
                     </div>
                   </td>
                 </tr>
@@ -590,10 +599,11 @@ export function AdminDashboard() {
                   <td>{v.skills?.join(', ')}</td>
                   <td><StatusBadge status={v.status} /></td>
                   <td>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       {v.status !== 'available' && v.status !== 'busy' && <button className="btn btn-xs btn-primary" onClick={() => handleReview('volunteer', v.id, 'available')}>Approve</button>}
-                      {v.status !== 'rejected' && <button className="btn btn-xs btn-danger"  onClick={() => handleReview('volunteer', v.id, 'rejected')}>Reject</button>}
+                      {v.status !== 'rejected' && <button className="btn btn-xs btn-danger" onClick={() => handleReview('volunteer', v.id, 'rejected')}>Reject</button>}
                       {(v.status === 'available' || v.status === 'busy') && <button className="btn btn-xs btn-outline" onClick={() => handleReview('volunteer', v.id, 'suspended')}>Suspend</button>}
+                      <button className="btn btn-xs btn-outline" style={{ borderColor: 'var(--color-danger)', color: 'var(--color-danger)' }} onClick={() => handleDeleteItem('volunteer', v.id, 'volunteer')}>Delete</button>
                     </div>
                   </td>
                 </tr>
@@ -626,10 +636,11 @@ export function AdminDashboard() {
                   <td>{new Date(r.start_time).toLocaleDateString()}</td>
                   <td><StatusBadge status={r.status} /></td>
                   <td>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       {r.status !== 'approved' && r.status !== 'completed' && <button className="btn btn-xs btn-primary" onClick={() => handleReview('volunteer_request', r.id, 'approved')}>Approve</button>}
-                      {r.status !== 'rejected' && r.status !== 'completed' && <button className="btn btn-xs btn-danger"  onClick={() => handleReview('volunteer_request', r.id, 'rejected', true)}>Reject</button>}
-                      {r.status === 'approved' && <button className="btn btn-xs btn-cta"     onClick={() => handleMatch(r.id)}> Assign</button>}
+                      {r.status !== 'rejected' && r.status !== 'completed' && <button className="btn btn-xs btn-danger" onClick={() => handleReview('volunteer_request', r.id, 'rejected', true)}>Reject</button>}
+                      {r.status === 'approved' && <button className="btn btn-xs btn-cta" onClick={() => handleMatch(r.id)}>Assign</button>}
+                      <button className="btn btn-xs btn-outline" style={{ borderColor: 'var(--color-danger)', color: 'var(--color-danger)' }} onClick={() => handleDeleteItem('volunteer_request', r.id, 'volunteer request')}>Delete</button>
                     </div>
                   </td>
                 </tr>

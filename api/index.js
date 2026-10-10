@@ -361,6 +361,16 @@ router$8.put("/campaigns/:id/review", async (req, res) => {
 		error: error?.message
 	});
 });
+router$8.delete("/campaigns/:id", async (req, res) => {
+	const { id } = req.params;
+	const user = req.user;
+	const { error } = await supabase.from("campaigns").delete().eq("id", id);
+	if (!error) await logAudit(user.id, `campaign_deleted`, "campaigns", id, {});
+	res.json({
+		success: !error,
+		error: error?.message
+	});
+});
 router$8.get("/needs", async (req, res) => {
 	const { status } = req.query;
 	let query = supabase.from("needs").select("*, orphanage:orphanages(name, city)").order("created_at", { ascending: false });
@@ -393,6 +403,16 @@ router$8.put("/needs/:id/review", async (req, res) => {
 		error: error?.message
 	});
 });
+router$8.delete("/needs/:id", async (req, res) => {
+	const { id } = req.params;
+	const user = req.user;
+	const { error } = await supabase.from("needs").delete().eq("id", id);
+	if (!error) await logAudit(user.id, `need_deleted`, "needs", id, {});
+	res.json({
+		success: !error,
+		error: error?.message
+	});
+});
 router$8.get("/volunteers", async (req, res) => {
 	const { status } = req.query;
 	let query = supabase.from("volunteers").select("*, profiles!volunteers_profile_id_fkey(full_name)").order("created_at", { ascending: false });
@@ -418,6 +438,16 @@ router$8.put("/volunteers/:id/review", async (req, res) => {
 	res.json({
 		success: !error,
 		data,
+		error: error?.message
+	});
+});
+router$8.delete("/volunteers/:id", async (req, res) => {
+	const { id } = req.params;
+	const user = req.user;
+	const { error } = await supabase.from("volunteers").delete().eq("id", id);
+	if (!error) await logAudit(user.id, `volunteer_deleted`, "volunteers", id, {});
+	res.json({
+		success: !error,
 		error: error?.message
 	});
 });
@@ -450,6 +480,16 @@ router$8.put("/volunteer-requests/:id/review", async (req, res) => {
 	res.json({
 		success: !error,
 		data,
+		error: error?.message
+	});
+});
+router$8.delete("/volunteer-requests/:id", async (req, res) => {
+	const { id } = req.params;
+	const user = req.user;
+	const { error } = await supabase.from("volunteer_requests").delete().eq("id", id);
+	if (!error) await logAudit(user.id, `volunteer_request_deleted`, "volunteer_requests", id, {});
+	res.json({
+		success: !error,
 		error: error?.message
 	});
 });

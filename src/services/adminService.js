@@ -66,6 +66,26 @@ export async function reviewVolunteerRequest(id, status, rejectionReason) {
   return data.data;
 }
 
+export async function deleteAdminCampaign(id) {
+  const { data } = await apiClient.delete(`/admin/campaigns/${id}`);
+  return data;
+}
+
+export async function deleteAdminNeed(id) {
+  const { data } = await apiClient.delete(`/admin/needs/${id}`);
+  return data;
+}
+
+export async function deleteAdminVolunteer(id) {
+  const { data } = await apiClient.delete(`/admin/volunteers/${id}`);
+  return data;
+}
+
+export async function deleteAdminVolunteerRequest(id) {
+  const { data } = await apiClient.delete(`/admin/volunteer-requests/${id}`);
+  return data;
+}
+
 export async function triggerMatching(requestId) {
   const { data } = await apiClient.post(`/admin/volunteer-requests/${requestId}/match`);
   return data.data;
